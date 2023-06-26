@@ -148,3 +148,32 @@ vector<int> traverseBoundary(TreeNode<int>* root){
     traverseRight(root->right,ans);
     return ans;
 }
+
+//Vertical Order Traversal
+class Solution {
+public:
+    map<int,vector<pair<int,int>>> mp;
+    void f(int r,int c,TreeNode* root){
+        if(!root) return;
+        mp[c].push_back({r,root->val});
+        f(r+1,c-1,root->left);
+        f(r+1,c+1,root->right);
+    }
+    static bool cmp(pair<int,int>a,pair<int,int>b){
+        if(a.first == b.first)return a.second < b.second;
+        else return a.first < b.first;
+    }
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        vector<vector<int>> ans;
+        f(0,0,root); 
+        for(auto it: mp){
+            sort(it.second.begin(),it.second.end(),cmp);
+            vector<int> tmp;
+            for(auto i:it.second){
+                tmp.push_back(i.second);
+            }
+            ans.push_back(tmp);
+        }
+        return ans;
+    }
+};
